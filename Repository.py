@@ -37,7 +37,6 @@ class _LongTag:
             os.mkdir(path + self.hash_id[:2])
         open(path + self.hash_id[:2] + '/' + self.hash_id[2:], 'wb').write(
             zlib.compress(self.get_text().encode('utf-8')))
-        print(self.hash_id)
 
 
 class _Commit:
@@ -81,7 +80,6 @@ class _Commit:
         self.comment = comment
         length = len(self.get_string())
         self.tree = self.tree[:7] + str(length - 11) + self.tree[10:]
-        print(self.tree)
 
     def calc_hash(self) -> str:
         return hashlib.sha1(self.get_string().encode('utf-8')).hexdigest()
