@@ -341,6 +341,10 @@ class Repository:
             self.__make_changes(hashes[i], comments[i])
         self.__write_changes()
         self.__remove_empty_dirs()
+        if os.path.exists(self.path+"FETCH_HEAD"):
+            data=open(self.path+"FETCH_HEAD").read()
+            if data[:40] in self.changes:
+                open(self.path+"FETCH_HEAD",'w').write(self.changes[data[:40]]+data[40:])
 
     def get_full_hash(self, input_hash):
         for i in self.commits:
