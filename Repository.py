@@ -171,7 +171,7 @@ class Repository:
         if til_ind==-1 and up_ind==-1:
             return point
 
-        command_queue = Queue()
+        command_queue = Queue()     #подобие стекового калькулятора для обработки этих странных выражений
         args_queue = Queue()
         args = list(map(lambda x: int(x) if len(x) > 0 else 1, exp.replace('^', '~').split('~')[1:]))
         for i in args:
@@ -330,11 +330,19 @@ class Repository:
         if not re.match("[a-f0-9]", open(self.path + "/HEAD").read().strip()) is None:
             self.__update_ref(self.path + "/HEAD")
 
+    def __remove_empty_dirs(self):
+        for directory in os.listdir(self.path + "/objects"):
+            if len(directory) != 2:
+                continue
+            if len(os.listdir(self.path + "/objects/" + directory))==0:
+                os.rmdir(self.path + "/objects/"+directory)
+
     def change_commits(self, hashes: List[str], comments: List[str]):
         self.__make_graph()
         for i in range(len(hashes)):
             self.__make_changes(hashes[i], comments[i])
         self.__write_changes()
+        self.__remove_empty_dirs()
 
     def get_full_hash(self, input_hash):
         for i in self.commits:
